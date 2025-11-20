@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title>Final Link</title>
+<meta name="viewport" content="width=device-width, initial-scale=1">
+
+<script>
+window.onload = function() {
+
+    const params = new URLSearchParams(window.location.search);
+    const fileId = params.get("file") || "default";
+
+    // time check
+    const saved = localStorage.getItem("verify_time");
+    if (!saved) {
+        document.getElementById("msg").innerHTML =
+            "<b style='color:red'>Direct Access Blocked!</b><br>You must verify first.";
+        return;
+    }
+
+    const startTime = parseInt(saved);
+    const now = Date.now();
+    const elapsed = now - startTime;
+
+    // 30 seconds = 30000 ms
+    if (elapsed < 30000) {
+        document.getElementById("msg").innerHTML =
+            "<b style='color:red;font-size:22px'>Bypass Detected!</b><br>Please do not bypass.";
+        return;
+    }
+
+    // Real user → show final file link
+    const finalLink = "https://filesent.blogspot.com/2025/06/wait-5-second.html?file=" + fileId;
+
+    document.getElementById("msg").innerHTML = `
+        <b style='color:green;font-size:22px'>Verification Passed ✔</b><br>
+        <a href="${finalLink}" 
+           style="display:inline-block;margin-top:20px;padding:12px 20px;
+           background:black;color:white;border-radius:6px;text-decoration:none;">
+           Open Final Link
+        </a>
+    `;
+}
+</script>
+
+</head>
+
+<body style="font-family:Arial;text-align:center;margin-top:60px;">
+<h2>Please wait...</h2>
+<div id="msg" style="margin-top:20px;font-size:18px;"></div>
+
+</body>
+</html>

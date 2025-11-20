@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title>Create Verification Link</title>
+<meta name="viewport" content="width=device-width, initial-scale=1">
+
+<script>
+async function createVerification() {
+
+    // --- SAVE TIME ---
+    const now = Date.now();
+    localStorage.setItem("verify_time", now);
+
+    // Get file ID
+    const params = new URLSearchParams(window.location.search);
+    const fileId = params.get("file") || "default";
+
+    // AdrinoLinks API key
+    const apiKey = "f6fb0edd0a89f2c374032324904191d98e663f5c";
+
+    // final page url
+    const finalURL = "https://samirmeshram.github.io/Verification/final.html?file=" + fileId;
+
+    // AdrinoLinks API for short link
+    const apiURL = `https://adrinolinks.in/api?api=${apiKey}&url=${encodeURIComponent(finalURL)}`;
+
+    document.getElementById("btn").innerText = "Generating...";
+    document.getElementById("btn").disabled = true;
+
+    try {
+        const res = await fetch(apiURL);
+        const data = await res.json();
+
+        if (data.status !== "success") {
+            alert("API Error: " + data.message);
+            return;
+        }
+
+        // Short link received
+        const shortUrl = data.shortenedUrl;
+
+        // Redirect to short link
+        window.location.href = shortUrl;
+
+    } catch (e) {
+        alert("Network error");
+    }
+}
+</script>
+
+</head>
+
+<body style="font-family:Arial;text-align:center;margin-top:60px;">
+<h2>Create Verification Link</h2>
+
+<button id="btn" onclick="createVerification()" 
+style="padding:12px 20px;font-size:18px;">
+Generate Verification Link
+</button>
+
+</body>
+</html>
